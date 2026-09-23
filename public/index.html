@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovieHub</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="logo" href="/">Movie<span>Hub</span></a>
+    <nav>
+      <a href="#movies">Movies</a>
+      <a href="/admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">YOUR MOVIE LIBRARY</p>
+        <h1>Discover your next movie.</h1>
+        <p class="hero-text">A clean movie catalog for films you own, created, or are authorized to distribute.</p>
+        <a class="btn" href="#movies">Browse Movies</a>
+      </div>
+    </section>
+
+    <section id="movies" class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">LIBRARY</p>
+          <h2>Latest Movies</h2>
+        </div>
+        <input id="search" class="search" placeholder="Search movies...">
+      </div>
+      <div id="movieGrid" class="grid"></div>
+      <p id="empty" class="empty">No movies added yet. Open Admin to add your first authorized movie.</p>
+    </section>
+  </main>
+
+  <footer>MovieHub • Built for authorized content</footer>
+  <script src="/app.js"></script>
+</body>
+</html>
