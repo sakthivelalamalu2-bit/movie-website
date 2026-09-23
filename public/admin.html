@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovieHub Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="logo" href="/">Movie<span>Hub</span></a>
+    <a href="/">← Back to site</a>
+  </header>
+
+  <main class="admin">
+    <section class="panel">
+      <p class="eyebrow">ADMIN</p>
+      <h1>Add a movie</h1>
+      <p class="muted">Only upload movies you own or are legally authorized to distribute.</p>
+
+      <form id="movieForm">
+        <label>Movie title<input name="title" required></label>
+        <div class="two">
+          <label>Year<input name="year" type="number" min="1888" max="2100"></label>
+          <label>Language<input name="language" placeholder="Tamil"></label>
+        </div>
+        <label>Genre<input name="genre" placeholder="Action, Drama"></label>
+        <label>Description<textarea name="description" rows="5"></textarea></label>
+        <label>Poster image<input name="poster" type="file" accept="image/*"></label>
+        <label>Movie file<input name="movie" type="file" accept="video/*" required></label>
+        <button class="btn" type="submit">Upload Movie</button>
+      </form>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">MANAGE</p>
+      <h2>Uploaded Movies</h2>
+      <div id="adminList"></div>
+    </section>
+  </main>
+  <script src="/admin.js"></script>
+</body>
+</html>
