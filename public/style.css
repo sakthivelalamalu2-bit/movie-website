@@ -1,1 +1,438 @@
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#090b10;color:#f5f7fb}.nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;border-bottom:1px solid #20242d;background:#0b0d12;position:sticky;top:0;z-index:5}.nav a{color:#d9dde6;text-decoration:none}.logo{font-size:24px;font-weight:800;color:#fff!important}.logo span{color:#ff375f}.nav nav{display:flex;gap:25px}.hero{min-height:510px;padding:110px 8%;display:flex;align-items:center;background:radial-gradient(circle at 75% 30%,#4a1024 0,#170d17 35%,#090b10 70%)}.hero h1{font-size:clamp(42px,7vw,78px);max-width:760px;line-height:1.02;margin:10px 0}.hero-text{max-width:600px;color:#aeb5c3;font-size:18px;line-height:1.7}.eyebrow{color:#ff5576;letter-spacing:2px;font-size:12px;font-weight:800}.btn{display:inline-block;border:0;background:#ff375f;color:#fff;padding:13px 20px;border-radius:10px;text-decoration:none;font-weight:800;cursor:pointer}.small{padding:9px 14px;font-size:14px}.section{padding:70px 7%}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:30px}.section h2{font-size:34px;margin:6px 0}.search{background:#11151d;border:1px solid #2a303b;color:#fff;padding:13px 16px;border-radius:10px;min-width:260px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px}.card{background:#11151d;border:1px solid #202632;border-radius:14px;overflow:hidden}.card img,.poster-placeholder{width:100%;height:300px;object-fit:cover}.poster-placeholder{display:grid;place-items:center;font-size:60px;background:#191d26}.card-body{padding:17px}.card h3{margin:0 0 8px;font-size:19px}.card p{color:#929aaa;font-size:13px;line-height:1.5}.desc{min-height:40px}.empty{text-align:center;color:#808897;padding:70px 0}.admin{max-width:900px;margin:50px auto;padding:0 20px;display:grid;gap:25px}.panel{background:#11151d;border:1px solid #252b36;border-radius:16px;padding:30px}.panel h1,.panel h2{margin-top:0}.muted{color:#8f98a8}.panel form{display:grid;gap:17px}.panel label{display:grid;gap:7px;color:#cdd3dd;font-weight:700}.panel input,.panel textarea{width:100%;background:#0b0e14;border:1px solid #2a303b;color:#fff;padding:12px;border-radius:9px;font:inherit}.two{display:grid;grid-template-columns:1fr 1fr;gap:17px}.status{color:#ff6682}.admin-row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #252b36;padding:15px 0}.admin-row div{display:grid;gap:5px}.admin-row span{color:#808897;font-size:13px}.danger{background:#2a1218;color:#ff8da3;border:1px solid #55202d;padding:8px 12px;border-radius:8px;cursor:pointer}footer{text-align:center;color:#666f7e;padding:40px;border-top:1px solid #20242d}@media(max-width:650px){.nav{padding:0 5%}.hero{padding:80px 7%}.section-head{align-items:stretch;flex-direction:column}.search{min-width:0;width:100%}.two{grid-template-columns:1fr}.card img,.poster-placeholder{height:270px}}
+/* ================================
+   GLOBAL
+================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0f172a;
+  color: #ffffff;
+}
+
+/* ================================
+   HEADER
+================================ */
+
+header {
+  background: #020617;
+  padding: 18px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e293b;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #ffffff;
+}
+
+nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 15px;
+}
+
+nav a:hover {
+  color: #ffffff;
+}
+
+/* ================================
+   MAIN CONTAINER
+================================ */
+
+main {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+/* ================================
+   HERO
+================================ */
+
+.hero {
+  padding: 45px 25px;
+  text-align: center;
+  background: #1e293b;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.hero h2 {
+  margin-top: 0;
+  font-size: 36px;
+}
+
+.hero p {
+  color: #cbd5e1;
+  font-size: 17px;
+}
+
+/* ================================
+   MOVIE GRID
+================================ */
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 22px;
+}
+
+/* ================================
+   MOVIE CARD
+================================ */
+
+.movie-card {
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.movie-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.movie-info {
+  padding: 15px;
+}
+
+.movie-info h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.movie-info p {
+  margin: 5px 0;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+/* ================================
+   BUTTONS
+================================ */
+
+button,
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  background: #2563eb;
+  color: white;
+  transition: background 0.2s ease;
+}
+
+button:hover,
+.btn:hover {
+  background: #1d4ed8;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ================================
+   ADMIN PAGE
+================================ */
+
+.admin-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 25px;
+}
+
+.admin-container h2 {
+  margin-bottom: 25px;
+}
+
+/* ================================
+   FORM
+================================ */
+
+form {
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: bold;
+  color: #e2e8f0;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+/* ================================
+   ADMIN MOVIE LIST
+================================ */
+
+.admin-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e293b;
+  padding: 15px 18px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.admin-row strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.admin-row span {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* ================================
+   DELETE BUTTON
+================================ */
+
+button.danger {
+  background: #dc2626;
+}
+
+button.danger:hover {
+  background: #b91c1c;
+}
+
+/* ================================
+   STATUS MESSAGE
+================================ */
+
+#status {
+  margin-top: 15px;
+  padding: 10px 0;
+  color: #cbd5e1;
+}
+
+.muted {
+  color: #94a3b8;
+}
+
+/* ================================
+   UPLOAD PROGRESS
+================================ */
+
+#uploadInfo {
+  margin-top: 15px;
+  padding: 18px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+}
+
+#uploadInfo strong {
+  font-size: 16px;
+}
+
+#uploadPercent {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* Progress bar background */
+
+.progress-container {
+  width: 100%;
+  height: 20px;
+  background: #334155;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+/* Progress bar */
+
+#progressBar {
+  width: 0%;
+  height: 100%;
+  background: #22c55e;
+  transition: width 0.2s ease;
+}
+
+/* Uploaded information */
+
+#uploadDetails,
+#remaining {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #cbd5e1;
+}
+
+/* ================================
+   SUCCESS / ERROR
+================================ */
+
+.success {
+  color: #22c55e;
+}
+
+.error {
+  color: #ef4444;
+}
+
+/* ================================
+   FOOTER
+================================ */
+
+footer {
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 40px;
+  color: #94a3b8;
+  border-top: 1px solid #1e293b;
+}
+
+/* ================================
+   RESPONSIVE - TABLET
+================================ */
+
+@media (max-width: 768px) {
+  header {
+    padding: 15px 18px;
+  }
+
+  header h1 {
+    font-size: 21px;
+  }
+
+  nav a {
+    margin-left: 10px;
+    font-size: 13px;
+  }
+
+  main {
+    padding: 20px 15px;
+  }
+
+  .hero {
+    padding: 35px 18px;
+  }
+
+  .hero h2 {
+    font-size: 28px;
+  }
+
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .movie-card img {
+    height: 240px;
+  }
+
+  .admin-container {
+    padding: 15px;
+  }
+}
+
+/* ================================
+   RESPONSIVE - MOBILE
+================================ */
+
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  nav a {
+    margin: 0 7px;
+  }
+
+  .hero h2 {
+    font-size: 24px;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .movie-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .movie-card img {
+    height: 210px;
+  }
+
+  .movie-info {
+    padding: 10px;
+  }
+
+  .movie-info h3 {
+    font-size: 15px;
+  }
+
+  .admin-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .admin-row button {
+    width: 100%;
+  }
+
+  #uploadPercent {
+    font-size: 24px;
+  }
+
+  .progress-container {
+    height: 18px;
+  }
+}
