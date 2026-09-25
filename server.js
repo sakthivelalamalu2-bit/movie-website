@@ -9,25 +9,110 @@ const app = express();
 // Locally, it will use port 3000.
 const PORT = process.env.PORT || 3000;
 
-// Directories
+// ======================================================
+// ADMIN LOGIN
+// ======================================================
+
+const ADMIN_USER = process.env.ADMIN_USER || "admin";
+const ADMIN_PASSWORD =
+  process.env.ADMIN_PASSWORD || "change-this-password";
+
+// Admin authentication middleware
+function adminAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Basic ")) {
+    res.setHeader(
+      "WWW-Authenticate",
+      'Basic realm="Admin Area"'
+    );
+
+    return res.status(401).send("Admin login required.");
+  }
+
+  const encodedCredentials = authHeader.split(" ")[1];
+
+  let decodedCredentials;
+
+  try {
+    decodedCredentials = Buffer
+      .from(encodedCredentials, "base64")
+      .toString("utf8");
+  } catch (error) {
+    res.setHeader(
+      "WWW-Authenticate",
+      'Basic realm="Admin Area"'
+    );
+
+    return res.status(401).send("Invalid authentication.");
+  }
+
+  const separatorIndex = decodedCredentials.indexOf(":");
+
+  if (separatorIndex === -1) {
+    res.setHeader(
+      "WWW-Authenticate",
+      'Basic realm="Admin Area"'
+    );
+
+    return res.status(401).send("Invalid authentication.");
+  }
+
+  const username = decodedCredentials.substring(
+    0,
+    separatorIndex
+  );
+
+  const password = decodedCredentials.substring(
+    separatorIndex + 1
+  );
+
+  if (
+    username !== ADMIN_USER ||
+    password !== ADMIN_PASSWORD
+  ) {
+    res.setHeader(
+      "WWW-Authenticate",
+      'Basic realm="Admin Area"'
+    );
+
+    return res
+      .status(401)
+      .send("Invalid username or password.");
+  }
+
+  next();
+}
+
+// ======================================================
+// DIRECTORIES
+// ======================================================
+
 const dataDir = path.join(__dirname, "data");
 const uploadsDir = path.join(__dirname, "uploads");
 const postersDir = path.join(uploadsDir, "posters");
 const moviesDir = path.join(uploadsDir, "movies");
 
-// Create required directories
-[dataDir, uploadsDir, postersDir, moviesDir].forEach((dir) => {
-  fs.mkdirSync(dir, { recursive: true });
-});
+[dataDir, uploadsDir, postersDir, moviesDir].forEach(
+  (dir) => {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+);
 
-// Movie database file
+// ======================================================
+// MOVIE DATABASE
+// ======================================================
+
 const dbFile = path.join(dataDir, "movies.json");
 
 if (!fs.existsSync(dbFile)) {
   fs.writeFileSync(dbFile, "[]", "utf8");
 }
 
-// Multer storage configuration
+// ======================================================
+// MULTER STORAGE
+// ======================================================
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "poster") {
@@ -49,7 +134,10 @@ const storage = multer.diskStorage({
   }
 });
 
-// Upload configuration
+// ======================================================
+// UPLOAD CONFIGURATION
+// ======================================================
+
 const upload = multer({
   storage: storage,
 
@@ -59,28 +147,69 @@ const upload = multer({
   }
 });
 
-// Middleware
+// ======================================================
+// MIDDLEWARE
+// ======================================================
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 
-// Website files
-app.use(express.static(path.join(__dirname, "public")));
+// ======================================================
+// PROTECTED ADMIN PAGE
+// ======================================================
 
-// Uploaded files
-app.use("/uploads", express.static(uploadsDir));
+app.get("/admin", adminAuth, (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "public", "admin.html")
+  );
+});
 
-// Read movies from JSON database
+app.get("/admin.html", adminAuth, (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "public", "admin.html")
+  );
+});
+
+// ======================================================
+// PUBLIC WEBSITE
+// ======================================================
+
+app.use(
+  express.static(path.join(__dirname, "public"))
+);
+
+// Uploaded posters and movies remain public
+app.use(
+  "/uploads",
+  express.static(uploadsDir)
+);
+
+// ======================================================
+// DATABASE FUNCTIONS
+// ======================================================
+
 function readMovies() {
   try {
-    const data = fs.readFileSync(dbFile, "utf8");
+    const data = fs.readFileSync(
+      dbFile,
+      "utf8"
+    );
+
     return JSON.parse(data);
   } catch (error) {
-    console.error("Error reading movies database:", error);
+    console.error(
+      "Error reading movies database:",
+      error
+    );
+
     return [];
   }
 }
 
-// Write movies to JSON database
 function writeMovies(movies) {
   fs.writeFileSync(
     dbFile,
@@ -89,51 +218,77 @@ function writeMovies(movies) {
   );
 }
 
-// Get all movies
+// ======================================================
+// GET ALL MOVIES
+// ======================================================
+
+// Public - everyone can view movies
 app.get("/api/movies", (req, res) => {
   res.json(readMovies());
 });
 
-// Add a movie
+// ======================================================
+// ADD MOVIE
+// ======================================================
+
+// Protected - only admin can upload
 app.post(
   "/api/movies",
+  adminAuth,
   upload.fields([
-    { name: "poster", maxCount: 1 },
-    { name: "movie", maxCount: 1 }
+    {
+      name: "poster",
+      maxCount: 1
+    },
+    {
+      name: "movie",
+      maxCount: 1
+    }
   ]),
   (req, res) => {
     try {
-      // Movie file is required
       if (!req.files?.movie?.[0]) {
         return res.status(400).json({
           error: "Movie file is required."
         });
       }
 
-      const movieFile = req.files.movie[0];
-      const posterFile = req.files.poster?.[0];
+      const movieFile =
+        req.files.movie[0];
+
+      const posterFile =
+        req.files.poster?.[0];
 
       const movie = {
         id: Date.now().toString(),
 
-        title: req.body.title || "Untitled Movie",
+        title:
+          req.body.title ||
+          "Untitled Movie",
 
-        year: req.body.year || "",
+        year:
+          req.body.year || "",
 
-        language: req.body.language || "",
+        language:
+          req.body.language || "",
 
-        genre: req.body.genre || "",
+        genre:
+          req.body.genre || "",
 
-        description: req.body.description || "",
+        description:
+          req.body.description || "",
 
         poster: posterFile
-          ? "/uploads/posters/" + posterFile.filename
+          ? "/uploads/posters/" +
+            posterFile.filename
           : "",
 
         movieUrl:
-          "/uploads/movies/" + movieFile.filename,
+          "/uploads/movies/" +
+          movieFile.filename,
 
-        createdAt: new Date().toISOString()
+        createdAt:
+          new Date().toISOString()
       };
 
       const movies = readMovies();
@@ -145,72 +300,96 @@ app.post(
       res.status(201).json(movie);
 
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error(
+        "Upload error:",
+        error
+      );
 
       res.status(500).json({
-        error: "Failed to upload movie."
+        error:
+          "Failed to upload movie."
       });
     }
   }
 );
 
-// Delete a movie
-app.delete("/api/movies/:id", (req, res) => {
-  try {
-    const movies = readMovies();
+// ======================================================
+// DELETE MOVIE
+// ======================================================
 
-    const movie = movies.find(
-      (item) => item.id === req.params.id
-    );
+// Protected - only admin can delete
+app.delete(
+  "/api/movies/:id",
+  adminAuth,
+  (req, res) => {
+    try {
+      const movies = readMovies();
 
-    if (!movie) {
-      return res.status(404).json({
-        error: "Movie not found."
-      });
-    }
-
-    // Delete poster and movie files
-    const filesToDelete = [
-      movie.poster,
-      movie.movieUrl
-    ];
-
-    for (const url of filesToDelete) {
-      if (!url) continue;
-
-      const filePath = path.join(
-        __dirname,
-        url.replace(/^\//, "")
+      const movie = movies.find(
+        (item) =>
+          item.id === req.params.id
       );
 
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+      if (!movie) {
+        return res.status(404).json({
+          error: "Movie not found."
+        });
       }
+
+      const filesToDelete = [
+        movie.poster,
+        movie.movieUrl
+      ];
+
+      for (const url of filesToDelete) {
+        if (!url) continue;
+
+        const filePath = path.join(
+          __dirname,
+          url.replace(/^\//, "")
+        );
+
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
+
+      const updatedMovies =
+        movies.filter(
+          (item) =>
+            item.id !== req.params.id
+        );
+
+      writeMovies(updatedMovies);
+
+      res.json({
+        success: true
+      });
+
+    } catch (error) {
+      console.error(
+        "Delete error:",
+        error
+      );
+
+      res.status(500).json({
+        error:
+          "Failed to delete movie."
+      });
     }
-
-    // Remove movie from database
-    const updatedMovies = movies.filter(
-      (item) => item.id !== req.params.id
-    );
-
-    writeMovies(updatedMovies);
-
-    res.json({
-      success: true
-    });
-
-  } catch (error) {
-    console.error("Delete error:", error);
-
-    res.status(500).json({
-      error: "Failed to delete movie."
-    });
   }
-});
+);
 
-// Start server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(
-    `Movie website running on port ${PORT}`
-  );
-});
+// ======================================================
+// START SERVER
+// ======================================================
+
+app.listen(
+  PORT,
+  "0.0.0.0",
+  () => {
+    console.log(
+      `Movie website running on port ${PORT}`
+    );
+  }
+);
